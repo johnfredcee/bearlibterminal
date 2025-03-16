@@ -21,6 +21,7 @@
 */
 
 #include "Window.hpp"
+#include <memory>
 #if defined(__linux)
 #include "X11Window.hpp"
 #endif
@@ -35,7 +36,7 @@
 
 namespace BearLibTerminal
 {
-	Window::Window(EventHandler handler):
+	Window::Window(const EventHandler& handler):
 		m_event_handler(handler),
 		m_minimum_size(1, 1),
 		m_fullscreen(false),
@@ -64,7 +65,7 @@ namespace BearLibTerminal
 		return std::wstring{};
 	}
 
-	std::unique_ptr<Window> Window::Create(EventHandler handler)
+	std::unique_ptr<Window> Window::Create(const EventHandler& handler)
 	{
 #if defined(__linux)
 		return std::make_unique<X11Window>(handler);

@@ -167,8 +167,10 @@ namespace BearLibTerminal
 		try
 		{
 			Module psapi(L"Psapi.dll");
-			auto EnumProcessModules = (BOOL WINAPI (*)(HANDLE, HMODULE*, DWORD, LPDWORD))psapi["EnumProcessModules"];
-			auto GetModuleFileNameExW = (DWORD WINAPI (*)(HANDLE, HMODULE, LPWSTR, DWORD))psapi["GetModuleFileNameExW"];
+			using DPMSig = BOOL (WINAPI *)(HANDLE, HMODULE*, DWORD, LPDWORD);
+			DPMSig EnumProcessModules =reinterpret_cast<DPMSig>( psapi["EnumProcessModules"] );
+			using GMFnExSig = DWORD (WINAPI *)(HANDLE, HMODULE, LPWSTR, DWORD);
+			GMFnExSig GetModuleFileNameExW = reinterpret_cast<GMFnExSig>( psapi["GetModuleFileNameExW"] );
 
 			HANDLE process = GetCurrentProcess();
 			DWORD bytes_needed = 0;

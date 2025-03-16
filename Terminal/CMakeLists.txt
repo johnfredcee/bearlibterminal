@@ -1,4 +1,6 @@
-cmake_minimum_required(VERSION 2.8)
+project(BearLibTerminal)
+
+cmake_minimum_required(VERSION 3.5)
 
 if (UNIX AND NOT APPLE)
 	set(LINUX TRUE)
@@ -9,7 +11,6 @@ option(BUILD_SHARED_LIBS "Build dynamic version of library" ON)
 add_subdirectory(Dependencies/FreeType)
 add_subdirectory(Dependencies/PicoPNG)
 
-project(BearLibTerminal)
 
 if(EXISTS "../CHANGELOG.md")
 	file(STRINGS "../CHANGELOG.md" TERMINAL_VERSION_TOP_LINE LIMIT_COUNT 1)
@@ -30,20 +31,32 @@ else()
 endif()
 
 # Release flags
-set(CMAKE_CXX_FLAGS_RELEASE "-O2 -g0")
+set(CMAKE_CXX_FLAGS_RELEASE "/O2")
 if (NOT APPLE)
+if (MSVC)
+	set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "/DEBUG:NONE")
+else()
 	set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "-s")
+endif()
 endif()
 
 # Debug flags
+if (MSVC)
+set(CMAKE_CXX_FLAGS_DEBUG "/Od /Zi")
+else()
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g3")
+endif()
 
 # Common flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+set (CMAKE_CXX_STANDARD 11)
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fvisibility=hidden")
 if(WIN32)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUNICODE")
+if (MSVC)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNOMINMAX")
+else()
 	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -static")
+endif()
 elseif(LINUX)
 	set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -static-libgcc")
 endif()

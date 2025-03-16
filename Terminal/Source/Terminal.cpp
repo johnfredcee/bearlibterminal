@@ -215,7 +215,7 @@ namespace BearLibTerminal
 		m_options.log_mode = Log::Instance().mode;
 
 		// Try to create window
-		m_window = Window::Create(std::bind(&Terminal::OnWindowEvent, this, std::placeholders::_1));
+		m_window = Window::Create(std::move(std::bind(&Terminal::OnWindowEvent, this, std::placeholders::_1)));
 
 		// Default parameters
 		SetOptionsInternal(L"window: size=80x25, icon=default; font: default; terminal.encoding=utf8; input.filter={keyboard}");

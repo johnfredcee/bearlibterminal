@@ -42,7 +42,7 @@ namespace BearLibTerminal
 	class Window
 	{
 	public:
-		typedef std::function<int(Event)> EventHandler;
+		using EventHandler = std::function<int(Event)>;
 		virtual ~Window();
 		virtual Size GetActualSize() = 0; // XXX: GetClientSize?
 		virtual std::wstring GetClipboard();
@@ -59,9 +59,9 @@ namespace BearLibTerminal
 		virtual void SetCursorVisibility(bool visible) = 0;
 		bool IsFullscreen() const;
 		virtual int PumpEvents() = 0;
-		static std::unique_ptr<Window> Create(EventHandler handler);
+		static std::unique_ptr<Window> Create(const EventHandler& handler);
 	protected:
-		Window(EventHandler handler);
+		Window(const EventHandler& handler);
 		EventHandler m_event_handler;
 		Size m_cell_size;
 		Size m_minimum_size;
